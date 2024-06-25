@@ -3,12 +3,20 @@ to join the OrderDetails table with the product table.  For TotalCount, you will
 SUM(Quantity) AS TotalCount .  Order by product name.
 You will need to group by product ID.  Paste your SQL statement below.
 
+SELECT p.productName, SUM(od.quantity) AS TotalCount FROM orderDetails AS od 
+JOIN products AS p ON od.productId=p.productId 
+ORDER BY p.productName GROUP BY p.productId;
+
 
 2. Retrieve the customer name and OrderDetailsID for all the OrderDetails for each customer,
 ordered by customer name. Paste your SQL statement below. You will have to join the Customers
 table with the Orders table, and the Orders table with the OrderDetails table, 
 because the Orders table is the one that ties the Customer table to the OrderDetails table.
 
+SELECT c.customername, od.orderDetailId FROM customers AS c 
+JOIN orders AS o ON c.customerId=o.customerId 
+JOIN orderDetails AS od ON o.orderId=od.orderId 
+ORDER BY c.customerName;
 
 3. Extend the previous query to join the Products table.  You are now joining the Customers, Orders,
 OrderDetails, and Products tables.  The result of your query should include the
@@ -17,29 +25,42 @@ may have ordered the same product in several different orders.  So the total qua
 SUM(Quantity) AS TotalQuantity and you must GROUP BY CustomerID, ProductID.  Paste your
 SQL statement below.
 
-
+SELECT c.customerName, p.productname, SUM(od.quantity) AS TotalQuantity FROM customers AS c 
+JOIN orders AS o ON c.customerId = o.customerId 
+JOIN orderDetails AS od ON o.orderId = od.orderId 
+JOIN products AS p ON od.productId = p.productId 
+GROUP BY c.customerid, p.productid;
 
 4. Extend the previous query to give the total price as well as the customer name, product name, 
 and total quantity.  Here you will have
 (SUM(Quantity) * Price) AS TotalPrice.  Paste your SQL statement below.
 
+SELECT customername, productName, SUM(od.quantity) AS TotalQuantity, (SUM(quantity)*price) AS TotalPrice 
+FROM products AS p 
+JOIN orderDetails AS od ON p.productId = od.productId 
+JOIN orders AS o ON o.orderId = od.orderId 
+JOIN customers AS c ON c.customerid = o.customerId 
+GROUP BY c.customerId, p.productId;
 
 5. Add a new Order to the Orders table.  You will have to specify the ID of an existing customer
 to satisfy the foreign key constraint.  You will also have to specify the ID of an existing
 employee.  Paste your SQL statement below.
 
+INSERT INTO orders (CustomerId, EmployeeId, OrderDate, ShipperId) VALUES (11, 9, 06/22/2024, 1);
 
 6. Add three OrderDetails.  These should specify the ID of the new Order you just created.  For each,
 you will have to specify the ID of an existing product.  Paste your SQL statement below.
 
+INSERT INTO orderDetails (orderId, productId, quantity) VALUES (10444, 3, 38), (10444, 7, 45), (10444, 11, 21);
 
 7.  Delete the third of the OrderDetails you just added.  Paste your SQL statement below.
 
-
+DELETE FROM orderDetails WHERE orderDetailId = 521;
 
 8. Update the Price Table, so that every product with a price less than $20 has the price increased by
 0.50.  Paste your SQL statement below.
 
+UPDATE products SET price = price + 0.5 WHERE price < 20;
 
 9.  Try to delete Customer 76.  What happens? What would you have to delete in order to delete
 this customer?  (Hint: It's not just orders.)   There are three statements to be performed, in order
@@ -49,4 +70,5 @@ DELETE FROM OrderDetails WHERE OrderID IN (SELECT OrderID FROM Orders WHERE Cust
 
 What are the other two statements?  Try them out, and then paste them below.
 
-
+DELETE FROM orders WHERE customerId = 76;
+DELETE FROM customers WHERE customerId = 76;
