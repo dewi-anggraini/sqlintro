@@ -24,7 +24,6 @@ that not every customer has an order, but be sure that you include those custome
 in the results of the query.  Paste your SQL statement below.
 SELECT c.customerName, o.orderID FROM customers AS c FULL OUTER JOIN orders AS o ON c.customerID=o.customerID ORDER BY c.customerName ASC;
 
-
 6. Retrieve the list of customer names for customers that have no orders.  There are two ways to do this
 One is to use a subquery, as follows:
 
